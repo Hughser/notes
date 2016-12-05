@@ -1,0 +1,437 @@
+\Carbon\Carbon::setLocale('zh');		設置diffForHumans 顯示為中文
+------------------------------------------------------------------------------
+composer指令
+------------------------------------------------------------------------------
+	Composer目錄
+	C:\Users\hugh\AppData\Roaming\Composer
+
+	關閉openSSL
+	composer config -g -- disable-tls true										
+
+	建立laravel專案名稱
+	composer create-project --prefer-dist laravel/laravel (new project name)	 										
+	安裝laravel專案的套件包
+	composer global require "laravel/installer" 			
+
+	創laravel專案5.2版	
+	composer create-project laravel/laravel (new project name) 5.2.* 					
+
+	重建 Class Map
+	composer dump-autoload
+
+	透過composer的lock安裝相關的套件
+	composer install
+
+	安裝barryvdh/laravel-debugbar
+	composer require barryvdh/laravel-debugbar
+
+	創laravel專案
+	laravel/installer: laravel (new project name)
+
+	autoload:自動加載
+		"files": [
+            "helpers/functions.php"
+        ]
+------------------------------------------------------------------------------
+artisan指令
+------------------------------------------------------------------------------
+	看route清單
+	php artisan route:list														
+	 													
+	建立controller
+	php artisan make:controller PostsController
+
+	建立Model
+	php artisan make:model Model\User --migration
+
+	建立seeder
+	php artisan make:seeder Tableseeder
+
+	建立migrate表
+	php artisan make:migration articles --create=posts
+
+	建立migrate
+	php artisan migrate
+
+	建立seed資料
+	php artisan db:seed
+
+	php artisan db:seed --class=UserTableSeeder
+
+	php artisan migrate:refresh --seed
+
+	設定key
+	php artisan key:generate
+
+	建立route緩衝 減少註冊路由的時間
+	php artisan route:cache
+
+	清除route緩衝
+	php artisan route:clear
+
+	啟動
+	php artisan serve
+
+------------------------------------------------------------------------------
+Route寫法
+------------------------------------------------------------------------------
+
+	url:/ 呼叫HomeController的index
+	Route::get('/','HomeController@index');   	
+
+	對student_no正規化 s+[0-9數字][至少10個數字]
+	Route::pattern('student_no','s[0-9]{10}');	
+
+	對底下的Route綁定前置的url /student/XXXX
+	Route::group(['prefix'=>'student'],function(){
+		
+		Route::get......
+	});							
+
+	設定Route name
+	Route::get('{student_no}',[
+			'as'=>'student',
+			'uses'=>'StudentController@getStudentData'
+		]);
+
+	接在Route後 對subject綁定輸入的值
+	->where(['subject'=>'(chinese|english|math)']);
+
+	隱藏式Route 5.3已移除 可獨立安裝
+	Route::controller('board','BoardController');
+
+	規定Route的的前置namespace名稱
+	Route::group(['namespace'=>'Cool'],function(){
+		Route::get('cool', 'TestController@index');
+	});
+
+------------------------------------------------------------------------------
+helper function
+------------------------------------------------------------------------------
+	laravel輔助方法 找根目錄(public)下的前端資源
+	asset(js/css/img等路徑)
+
+	laravel輔助方法 可以輸出Route下設定的url
+	<?= url()?>
+
+	laravel輔助方法 執行Controller的function
+	<?=action('TestController@index')?>
+
+	laravel輔助方法 url:/student 並給參數
+	<?=route('student',['student_no'=>'s1234567890' ]) ?>
+
+	compact(var name)		帶變數
+
+	public_path()			public目錄
+
+	str_limit(String,max lentgh,end String)		限制輸出字符串的數目
+
+------------------------------------------------------------------------------
+Debugbar:laravel debug套件
+------------------------------------------------------------------------------
+	Debugbar::info($object);
+
+	Debugbar::error('Error!');
+
+	Debugbar::warning('Watch out…');
+
+	Debugbar::addMessage('Another message', 'mylabel');
+
+------------------------------------------------------------------------------
+Migration:資料表結構
+------------------------------------------------------------------------------
+
+	bigInteger()		int
+
+	unique()			建立索引
+
+	unsigned()			非負數
+
+	string()			字串
+
+	default()			默認
+
+	boolean()(tinyint)  0-255
+
+	increments()		id自動增加
+
+	comment()			備註
+
+	nullable()			允許寫入 NULL 值
+
+	foreign(key)		外鍵
+
+	references(key)		參考
+
+	on(table)			來自那個表
+
+	onDelete()			只在刪除時會連同刪除有參考的主建
+
+	onUpdate()			只在更新時會連同更新有參考的主建
+
+------------------------------------------------------------------------------
+Model:資料表邏輯
+------------------------------------------------------------------------------
+	$fillable			可使用create
+
+	$guarded			不可使用create
+
+	$hidden				隱藏值
+
+	$visible			顯示值
+
+	$dates				軟刪除  'deleted_at' is null  要搭配use SoftDeletes
+
+	hasMany belongsTo	一對多
+
+	hasOne	belongsTo	一對一
+
+	belongsToMany		多對多
+
+------------------------------------------------------------------------------
+Eloquent ORM
+------------------------------------------------------------------------------
+	select($columns)	查詢		
+
+	latest()			created_at order by
+
+	take(int)			limit
+
+	with(table name)	預先載入 
+
+	sync(array)			做同步資料
+
+------------------------------------------------------------------------------
+Query builder: DB::
+------------------------------------------------------------------------------
+
+	DB::table(table name)				資料表
+
+	DB::where(欄位,值/(>,<),max值)		條件	
+
+	DB::orderBy($column,預設asc)		遞增或遞減的順序排序
+
+	DB::simplePaginate(筆數)			分頁 沒有123 
+
+	DB::paginate(筆數)					分頁
+
+	DB::find(PK)						找資料
+
+	DB::pluck($column)					取單一欄位資料
+
+	DB::limit(limit)					取筆數
+	
+	DB::get($column 預設*)				取資料 Collection
+
+------------------------------------------------------------------------------
+DB:原生SQL
+------------------------------------------------------------------------------
+
+	DB::select(SQL)
+
+	DB::insert(SQL)
+
+	DB::update(SQL)
+
+	DB::delete(SQL)
+
+------------------------------------------------------------------------------
+Faker:假資訊
+------------------------------------------------------------------------------
+	use Faker\Factory as Faker;
+
+	Faker::create(Language)			建立Faker 可設置語系 
+
+	$faker->sentence				句子
+
+	$faker->paragraph				文章
+
+	$faker->numberBetween(min,max)	亂數
+
+	$faker->randomElement(array)	隨機取值
+
+
+------------------------------------------------------------------------------
+Cache:快取
+------------------------------------------------------------------------------
+	Cache::tags(name)			群組的快取
+
+	Cache::put(key,value)      新增快取 會覆蓋相同key
+
+	Cache::get(key)			取快取
+
+	Cache::add(key,value)		新增快取 不覆蓋
+
+------------------------------------------------------------------------------
+Seeder:假資料
+------------------------------------------------------------------------------
+
+	Model::unguard()	解除model fillable
+
+	Model::reguard()	註冊model fillable
+
+------------------------------------------------------------------------------
+Middleware:中間檔 用於請求後要做的驗證
+------------------------------------------------------------------------------	
+	$response = $next($request)		請求後 
+
+	$middleware         			全域註冊
+
+	$routeMiddleware				宣告middleware名稱
+
+	middleware(Middleware名稱)		註冊
+
+------------------------------------------------------------------------------
+Auth:使用者登入驗證
+------------------------------------------------------------------------------
+	Auth::attempt(array(),是否記住我) 手動輸入驗證邏輯
+
+	Auth::user()						取使用者資料
+
+	Auth::check()						是否登入
+
+	Auth::logout()					登出
+
+	Auth::guest()						是否為訪客(未登入)
+
+------------------------------------------------------------------------------
+View:
+------------------------------------------------------------------------------
+	View::share(key,value)			將此變數傳遞給所有View
+
+	View(url)						生成View
+
+	composer(view,$callback)		註冊一個View監聽實作
+
+	with(value)						增加資料
+	
+------------------------------------------------------------------------------
+ValidatesRequests:驗證請求
+------------------------------------------------------------------------------
+	validate(未驗證資料,驗證規則,驗證錯誤message)	驗證資料
+
+	驗證失敗顯示提示 錯誤訊息會存在session
+	@if (count($errors) > 0)
+	    <div class="alert alert-danger">
+	        <ul>
+	            @foreach ($errors->all() as $error)
+	        <li>{{ $error }}</li>
+	            @endforeach
+	        </ul>
+	    </div>
+	@endif
+
+------------------------------------------------------------------------------
+Request:响應資料
+------------------------------------------------------------------------------
+	get(key)	取資料
+
+	only(key)	取資料
+------------------------------------------------------------------------------
+Redirect:導向
+------------------------------------------------------------------------------
+	Redirect::route(route名稱)	回傳一個RedirectResponse
+
+	Redirect::action(URL)			回傳一個RedirectResponse
+
+	Redirect::to(url)				生成一個絕對路徑
+
+	Redirect::back()				上一頁
+
+------------------------------------------------------------------------------
+RedirectResponse:導向後的响應
+------------------------------------------------------------------------------
+	withInput(array)			要回傳的值 不輸入代表回傳全部
+
+	withErrors(String)			驗證錯誤時回傳的結果
+
+------------------------------------------------------------------------------
+User:使用者資料
+------------------------------------------------------------------------------
+	where(欄位,值/(>,<),max值)	條件
+
+	orWhere(同where)			在第一個where內加條件 WHERE (a=1(第一) OR b=1(第二))		
+	count(欄位)					計算數量 欄位預設是*
+
+	paginate(筆數,欄位,?,?)		查詢的筆數
+
+------------------------------------------------------------------------------
+Hash:加密
+------------------------------------------------------------------------------
+	Hash::make()			加密
+
+------------------------------------------------------------------------------
+session:
+
+	session()->flash("key","values")		增加session只對下一次請求有效
+
+------------------------------------------------------------------------------
+Config:取設定
+------------------------------------------------------------------------------
+	Config::get('php_name.value')		取值
+	
+------------------------------------------------------------------------------
+input:取from data
+------------------------------------------------------------------------------
+	input::get('name',預設);			取值
+
+	input::has('name')					是否有輸入資料
+
+	input::all()						全部
+	
+	input::only()						部分資料
+
+	input::except()
+------------------------------------------------------------------------------	
+url:
+------------------------------------------------------------------------------
+	url::asset(path)				生成URL
+
+------------------------------------------------------------------------------
+maatwebsite/excel		導出/入excel
+------------------------------------------------------------------------------
+laravelcollective/html	HTML生成form
+------------------------------------------------------------------------------	
+	Form::open(array(											open form
+		'url' => 'url',
+		'method' => 'put',
+		'class' => 'form-horizontal',
+		'route' => 'route.name'(array('route.name', $user->id)),
+		'action' => 'Controller@method'
+		))		
+
+	Form::close()												close form
+
+	Form::label(												label
+		  'email', 
+		  'E-Mail Address',
+		   array('class' => 'awesome')
+		   );
+
+	Form::text('id',[class='class']);						input text
+
+	Form::password('id',[class='class']);					input password
+		   
+	Form::text('id', 'example@gmail.com');	   				input text
+											
+	Form::text('id', 'example@gmail.com');	   				input text
+
+	Form::email
+
+	Form::file
+
+	Form::checkbox
+
+	Form::radio
+
+	Form::select
+
+	Form::selectRange
+
+	Form::selectMonth
+
+	Form::submit
+
+	<input type="hidden" name="_method" value="DELETE">
+
+------------------------------------------------------------------------------

@@ -1,0 +1,86 @@
+建立儲存庫
+git init
+
+建立共用儲存庫
+git init --bare
+
+複製
+git clone [REPO_URI]
+
+新增至可commit file
+git add <file> 
+
+查看現在版控紀錄
+git status 
+
+精簡版 版控紀錄
+git status -s
+
+重設add
+git reset
+
+回歸到最新版本
+git reset --hard
+
+列出所有在index的檔案
+git ls-files
+
+查看所有分支
+git branch
+
+切換分支
+git checkout <branch name>
+
+建立分支
+git branch <branch name>
+
+建立分支並切換到該分支
+git checkout -b <branch name>
+
+刪除檔案分支
+git branch -d <branch name>
+
+刪除檔案
+git rm <file>
+
+刪除index內的file紀錄並保留當前工作目錄下的file
+git rm --cached <file> 
+
+更改黨名
+git mv <old> <new>
+
+commit
+git commit -m "message"
+
+修改最後一次commit
+git commit --amend
+
+將本次commit合併至上次commit
+git commit --amend -m "message"
+
+查看commit紀錄
+git log <限制輸出數量>
+
+查看commit紀錄	一行精簡版
+git log --graph --oneline
+
+查看單一檔案紀錄
+git log -p <file> 
+
+查看每行程式碼紀錄
+git blame <file> 
+
+讓檔案或目錄回到最近一次的commit
+git checkout <file>/.
+
+計算此file的hash
+git hash-objext <file>
+
+找最新版log
+git cat-file -p master 
+
+找tree有哪些blob
+git cat-file -p <tree hash>
+
+封裝舊物件
+git gc
